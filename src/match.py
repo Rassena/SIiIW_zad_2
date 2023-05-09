@@ -34,7 +34,7 @@ def player_vs_player():
         interface.count(*game.get_players_pieces()[1:])
 
 
-def player_vs_pc(evaluate=heuristics.piece_count, pc=PC_2):
+def player_vs_pc(evaluate=heuristics.piece_count, pc=PC_2, pc_minmax=True):
     game = Reversi()
     current_player = PLAYER_1
     while not game.game_over():
@@ -53,7 +53,7 @@ def player_vs_pc(evaluate=heuristics.piece_count, pc=PC_2):
                 interface.invalid_move()
                 row, col = read_move_player()
         else:
-            row, col = do_best_move(game, MAX_DEPTH, current_player, evaluate)
+            row, col = do_best_move(game, MAX_DEPTH, current_player, evaluate, pc_minmax)
         game.make_move(row, col, current_player)
         interface.player_put(current_player, row, col)
         current_player = get_opponent(current_player)
@@ -66,7 +66,7 @@ def player_vs_pc(evaluate=heuristics.piece_count, pc=PC_2):
         interface.count(*game.get_players_pieces()[1:])
 
 
-def pc_vs_pc(pc1_evaluate, pc2_evaluate):
+def pc_vs_pc(pc1_evaluate, pc2_evaluate,pc1_minmax=True, pc2_minmax=True):
     game = Reversi()
     current_player = PLAYER_1
     while not game.game_over():
@@ -80,9 +80,9 @@ def pc_vs_pc(pc1_evaluate, pc2_evaluate):
         interface.count(*game.get_players_pieces()[1:])
         interface.valid_moves(valid_moves, current_player)
         if current_player == 1:
-            row, col = do_best_move(game, MAX_DEPTH, current_player, pc1_evaluate)
+            row, col = do_best_move(game, MAX_DEPTH, current_player, pc1_evaluate, pc1_minmax)
         else:
-            row, col = do_best_move(game, MAX_DEPTH, current_player, pc2_evaluate)
+            row, col = do_best_move(game, MAX_DEPTH, current_player, pc2_evaluate, pc2_minmax)
         game.make_move(row, col, current_player)
         interface.player_put(current_player, row, col)
         current_player = get_opponent(current_player)

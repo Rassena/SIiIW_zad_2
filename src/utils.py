@@ -20,20 +20,24 @@ def evaluate(game: Reversi, player, heuristic=heuristics.piece_count):
     return player_score - opponent_score
 
 
-def do_best_move(game_state:Reversi, depth, player, evaluate):
+def do_best_move(game_state: Reversi, depth, player, evaluate, minmax=True):
     moves = game_state.get_valid_moves(player)
     best_move = moves[0]
     best_value = float('-inf')
     for move in moves[1:]:
         new_game = copy.deepcopy(game_state)
         new_game.make_move(move[0], move[1], player)
-        value = minimax(new_game, depth - 1, player, False, evaluate)
+        if minmax:
+            value = minimax(new_game, depth - 1, player, False, evaluate)
+        else:
+            value = alphabeta(new_game, depth - 1, player, True, float('-inf'), float('inf'), evaluate)
         if value > best_value:
             best_move = move
             best_value = value
     return best_move[0], best_move[1]
 
-def minimax(game_state:Reversi, depth, player, max_player, evaluate):
+
+def minimax(game_state: Reversi, depth, player, max_player, evaluate):
     if depth == 0 or game_state.game_over():
         return evaluate(game_state, player)
 
@@ -47,9 +51,33 @@ def minimax(game_state:Reversi, depth, player, max_player, evaluate):
     else:
         value = float('inf')
         for move in game_state.get_valid_moves(get_opponent(player)):
-            new_node = copy.deepcopy(game_state)
-            new_node.make_move(move[0], move[1], get_opponent(player))
-            value = min(value, minimax(new_node, depth - 1, player, True, evaluate))
+            new_game_state = copy.deepcopy(game_state)
+            new_game_state.make_move(move[0], move[1], get_opponent(player))
+            value = min(value, minimax(new_game_state, depth - 1, player, True, evaluate))
         return value
 
 
+def alphabeta(game_state: Reversi, depth, player, max_player, alpha, beta, evaluate):
+    if depth == 0 or game_state.game_over():
+        return evaluate(game_state, player)
+
+    if max_player:
+        value = float('-inf')
+        for move in game_state.get_valid_moves(player):
+            new_game_state = copy.deepcopy(game_state)
+            new_game_state.make_move(move[0], move[1], player)
+            value = max(value, alphabeta(new_game_state, depth - 1, player, False, alpha, beta, evaluate))
+            alpha = max(alpha, value)
+            if beta <= alpha:
+                break
+        return value
+    else:
+        value = float('inf')
+        for move in game_state.get_valid_moves(get_opponent(player)):
+            new_game_state = copy.deepcopy(game_state)
+            new_game_state.make_move(move[0], move[1], get_opponent(player))
+            value = min(value, alphabeta(new_game_state, depth - 1, player, True, alpha, beta, evaluate))
+            beta = min(beta, value)
+            if beta <= alpha:
+                break
+        return value
