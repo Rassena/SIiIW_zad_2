@@ -46,7 +46,7 @@ class Reversi:
             for d_col in range(-1, 2):
                 if d_row == 0 and d_col == 0:
                     continue
-                if self.is_valid_direction(row, col, d_row, d_col):
+                if self.is_valid_direction(row, col, d_row, d_col, player):
                     self.flip_direction(row, col, d_row, d_col, player)
 
     def flip_direction(self, row, col, d_row, d_col, player):
