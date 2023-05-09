@@ -21,9 +21,10 @@ def evaluate(game: Reversi, player):
 
 
 def do_best_move(game_state:Reversi, depth, player, evaluate):
-    best_move = None
+    moves = game_state.get_valid_moves()
+    best_move = moves[0]
     best_value = float('-inf')
-    for move in game_state.get_valid_moves():
+    for move in moves[1:]:
         new_game = copy.deepcopy(game_state)
         new_game.make_move(move[0], move[1], player)
         value = minimax(new_game, depth - 1, player, False, evaluate)

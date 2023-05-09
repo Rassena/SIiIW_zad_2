@@ -5,7 +5,7 @@ from utils import read_move_player, minimax, do_best_move
 import heuristics
 
 pc1_heuristic = heuristics.piece_count
-max_deph = 5
+max_deph = 3
 
 
 def player_vs_player():
@@ -14,7 +14,6 @@ def player_vs_player():
         valid_moves = game.get_valid_moves()
         if not valid_moves:
             interface.no_valid_moves()
-            game.change_player()
             continue
         interface.player_turn(game.current_player)
         print_board(game.board)
@@ -38,12 +37,12 @@ def player_vs_pc():
         valid_moves = game.get_valid_moves()
         if not valid_moves:
             interface.no_valid_moves()
-            game.change_player()
             continue
         interface.player_turn(game.current_player)
         if game.current_player == 2:
             row, col = do_best_move(game, max_deph, game.current_player, pc1_heuristic)
             game.make_move(row, col)
+            interface.player_put(game.opponent, row, col)
             continue
         print_board(game.board)
         interface.valid_moves(valid_moves)
@@ -51,6 +50,7 @@ def player_vs_pc():
             row, col = read_move_player()
             if (row, col) in valid_moves:
                 game.make_move(row, col)
+                interface.player_put(game.opponent, row, col)
             else:
                 interface.invalid_move()
 

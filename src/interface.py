@@ -8,9 +8,9 @@ def print_board(board):
             if board[row][col] == 0:
                 print(" ", end="|")
             elif board[row][col] == 1:
-                print("1", end="|")
+                print("X", end="|")
             else:
-                print("2", end="|")
+                print("O", end="|")
         print("\n  +-+-+-+-+-+-+-+-+")
 
 
@@ -29,5 +29,11 @@ def valid_moves(valid_moves):
 def invalid_move():
     print("Invalid move")
 
-def winner(winner):
-    print(f"Player {winner} wins!")
+def winner(player):
+    print(f"Player {player} wins!")
+
+def count(player_1, player_2):
+    print(f"Player1: {player_1} ; Player {player_2}")
+
+def player_put(player, row, col):
+    print(f"Player {player} put on: ({row};{col})")

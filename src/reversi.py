@@ -1,12 +1,14 @@
+def get_opponent(player):
+    return 3 - player
+
+
 class Reversi:
     def __init__(self):
         self.board = [[0] * 8 for _ in range(8)]
         self.board[3][3] = self.board[4][4] = 1
         self.board[3][4] = self.board[4][3] = 2
-        self.current_player = 1
-        self.opponent = 2
 
-    def get_valid_moves(self, player=None):
+    def get_valid_moves(self, player):
         moves = []
         for row in range(8):
             for col in range(8):
@@ -14,16 +16,7 @@ class Reversi:
                     moves.append((row, col))
         return moves
 
-    def change_player(self):
-        self.current_player = self.get_opponent()
-        self.opponent = self.get_opponent()
-
-    def get_opponent(self, player=None):
-        if not player:
-            player = self.current_player
-        return 3 - player
-
-    def is_valid_move(self, row, col, player=None):
+    def is_valid_move(self, row, col, player):
         if self.board[row][col] != 0:
             return False
         for d_row in range(-1, 2):
@@ -34,10 +27,8 @@ class Reversi:
                     return True
         return False
 
-    def is_valid_direction(self, row, col, d_row, d_col, player=None):
-        if not player:
-            player = self.current_player
-        opponent = self.get_opponent(player)
+    def is_valid_direction(self, row, col, d_row, d_col, player):
+        opponent = get_opponent(player)
         r, c = row + d_row, col + d_col
         if r < 0 or r >= 8 or c < 0 or c >= 8 or self.board[r][c] != opponent:
             return False
@@ -49,22 +40,19 @@ class Reversi:
             r, c = r + d_row, c + d_col
         return False
 
-    def make_move(self, row, col, opponent=False):
-        if opponent:
-            self.change_player()
-        self.board[row][col] = self.current_player
+    def make_move(self, row, col, player):
+        self.board[row][col] = player
         for d_row in range(-1, 2):
             for d_col in range(-1, 2):
                 if d_row == 0 and d_col == 0:
                     continue
                 if self.is_valid_direction(row, col, d_row, d_col):
-                    self.flip_direction(row, col, d_row, d_col)
-        self.change_player()
+                    self.flip_direction(row, col, d_row, d_col, player)
 
-    def flip_direction(self, row, col, d_row, d_col):
+    def flip_direction(self, row, col, d_row, d_col, player):
         r, c = row + d_row, col + d_col
-        while self.board[r][c] != self.current_player:
-            self.board[r][c] = self.current_player
+        while self.board[r][c] != player:
+            self.board[r][c] = player
             r, c = r + d_row, c + d_col
 
     def get_players_pieces(self):
@@ -74,9 +62,7 @@ class Reversi:
                 counts[self.board[row][col]] += 1
         return counts
 
-    def get_player_pieces(self, player=None):
-        if not player:
-            player = self.current_player
+    def get_player_pieces(self, player):
         counts = self.get_players_pieces()
         return counts[player]
 
@@ -90,6 +76,6 @@ class Reversi:
             return 0
 
     def game_over(self) -> bool:
-        current_player = len(self.get_valid_moves(self.current_player))
-        opponent = len(self.get_valid_moves(self.get_opponent()))
-        return (current_player + opponent) == 0
+        player_1 = len(self.get_valid_moves(1))
+        player_2 = len(self.get_valid_moves(2))
+        return (player_1 + player_2) == 0
