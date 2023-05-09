@@ -14,7 +14,7 @@ def player_vs_player():
                 break
             else:
                 interface.no_valid_moves()
-                game.current_player = 3 - game.current_player
+                game.change_player()
                 continue
         counter = 0
         interface.player_turn(game.current_player)

@@ -8,9 +8,9 @@ def print_board(board):
             if board[row][col] == 0:
                 print(" ", end="|")
             elif board[row][col] == 1:
-                print("X", end="|")
+                print("1", end="|")
             else:
-                print("O", end="|")
+                print("2", end="|")
         print("\n  +-+-+-+-+-+-+-+-+")
 
 
