@@ -24,46 +24,46 @@ center_value = 10
 corner_value = 50
 edge_value = 5
 mobility_value = 5
+piece_value = 1
 
-
-def heuristic1(player, game: Reversi):
+def control_center(game: Reversi, player):
     """ Control the center of the board """
-    score = 0
+    score = game.get_player_pieces() * piece_value
     for square in center_squares:
         if game.board[square] == player:
             score += center_value
     return score
 
 
-def heuristic2(player, game: Reversi):
+def control_edge(game: Reversi, player):
     """ Control the edges of the board """
-    score = 0
+    score = game.get_player_pieces() * piece_value
     for square in edge_squares:
         if game.board[square] == player:
             score += edge_value
     return score
 
 
-def heuristic3(player, game: Reversi):
+def control_corners(game: Reversi, player):
     """ Control the corners of the board """
-    score = 0
+    score = game.get_player_pieces() * piece_value
     for square in corner_squares:
         if game.board[square] == player:
             score += corner_value
     return score
 
 
-def heuristic4(player, game: Reversi):
+def mobility(game: Reversi, player):
     """ Mobility """
-    score = (len(game.get_valid_moves(player)) - len(game.get_valid_moves(game.get_opponent(player)))) * mobility_value
+    score = game.get_player_pieces() * piece_value
+    score += (len(game.get_valid_moves(player)) - len(game.get_valid_moves(game.get_opponent(player)))) * mobility_value
     return score
 
 
-def heuristic5(player, game: Reversi):
+def piece_count(game: Reversi, player):
     """ Piece Count """
     counts = game.get_players_pieces()
-
     my_pieces = counts[player]
     opponent_pieces = counts[game.get_opponent(player)]
-    score = len(my_pieces) - len(opponent_pieces)
+    score = my_pieces - opponent_pieces
     return score

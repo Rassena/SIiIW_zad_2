@@ -49,7 +49,9 @@ class Reversi:
             r, c = r + d_row, c + d_col
         return False
 
-    def make_move(self, row, col):
+    def make_move(self, row, col, opponent=False):
+        if opponent:
+            self.change_player()
         self.board[row][col] = self.current_player
         for d_row in range(-1, 2):
             for d_col in range(-1, 2):
@@ -72,6 +74,12 @@ class Reversi:
                 counts[self.board[row][col]] += 1
         return counts
 
+    def get_player_pieces(self, player=None):
+        if not player:
+            player = self.current_player
+        counts = self.get_players_pieces()
+        return counts[player]
+
     def get_winner(self):
         counts = self.get_players_pieces()
         if counts[1] > counts[2]:
@@ -80,3 +88,8 @@ class Reversi:
             return 2
         else:
             return 0
+
+    def game_over(self) -> bool:
+        current_player = len(self.get_valid_moves(self.current_player))
+        opponent = len(self.get_valid_moves(self.get_opponent()))
+        return (current_player + opponent) == 0
