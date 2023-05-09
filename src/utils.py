@@ -51,3 +51,5 @@ def minimax(game_state:Reversi, depth, player, max_player, evaluate):
             new_node.make_move(move[0], move[1], get_opponent(player))
             value = min(value, minimax(new_node, depth - 1, player, True, evaluate))
         return value
+
+
