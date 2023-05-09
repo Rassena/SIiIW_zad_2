@@ -5,14 +5,18 @@ EDGE_SQUARES = [(i, 0) for i in range(8)] + \
                [(i, 7) for i in range(8)] + \
                [(0, j) for j in range(8)] + \
                [(7, j) for j in range(8)]
+
 CENTER_VALUE = 10
 CORNER_VALUE = 50
 EDGE_VALUE = 5
 MOBILITY_VALUE = 5
 BASE_PIECE_VALUE = 1
 
-MAX_DEPTH = 3
 PLAYER_1 = 1
 PLAYER_2 = 2
+
 PC_1 = 1
+MAX_DEPTH_1 = 3
+
 PC_2 = 2
+MAX_DEPTH_2 = 4
