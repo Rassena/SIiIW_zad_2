@@ -1,7 +1,14 @@
 import copy
 
+from constans import MOBILITY_SATISFIED, CONTROL_CORNERS_SATISFIED, CONTROL_CENTER_SATISFIED, CONTROL_EDGE_SATISFIED, \
+    PIECE_COUNT_SATISFIED
 from reversi import Reversi, get_opponent
 import heuristics
+
+possible_heuristics = [heuristics.piece_count, heuristics.control_edge, heuristics.control_center,
+                       heuristics.control_corners, heuristics.mobility]
+heuristics_satisfaction = [PIECE_COUNT_SATISFIED, CONTROL_EDGE_SATISFIED, CONTROL_CENTER_SATISFIED,
+                           CONTROL_CORNERS_SATISFIED, MOBILITY_SATISFIED]
 
 
 def read_move_player():
@@ -15,9 +22,25 @@ def read_move_player():
 
 
 def evaluate(game: Reversi, player, heuristic=heuristics.piece_count):
-    player_score = heuristic(game, player)
+    player_score = heuristic(game, player) + heuristics.piece_count(game, player)
     opponent_score = heuristics.piece_count(game, get_opponent(player))
     return player_score - opponent_score
+
+
+def heuristic_change(game: Reversi, player, heuristic):
+    if heuristic_satisfied(game, player, heuristic):
+        heuristic_values = [evaluate(game, player, h) - h.satisfaction for h in possible_heuristics]
+        next_heuristic = 0
+        for k in range(len(heuristic_values) - 1):
+            if heuristic_values[next_heuristic] > heuristic_values[k + 1]:
+                next_heuristic = k + 1
+        return possible_heuristics[next_heuristic]
+    return heuristic
+
+
+def heuristic_satisfied(game: Reversi, player, heuristic):
+    for name in heuristics_satisfaction:
+    return evaluate(game, player, heuristic) > heuristic
 
 
 def do_best_move(game_state: Reversi, depth, player, evaluate, minmax=True):
