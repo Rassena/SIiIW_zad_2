@@ -11,6 +11,7 @@ heuristics_satisfaction = [PIECE_COUNT_SATISFIED, CONTROL_EDGE_SATISFIED, CONTRO
                            CONTROL_CORNERS_SATISFIED, MOBILITY_SATISFIED]
 
 
+
 def read_move_player():
     while True:
         try:
@@ -29,18 +30,21 @@ def evaluate(game: Reversi, player, heuristic=heuristics.piece_count):
 
 def heuristic_change(game: Reversi, player, heuristic):
     if heuristic_satisfied(game, player, heuristic):
-        heuristic_values = [evaluate(game, player, h) - h.satisfaction for h in possible_heuristics]
+        heuristic_values = [evaluate(game, player, possible_heuristics[i]) - heuristics_satisfaction[i] for i in range(len(possible_heuristics))]
         next_heuristic = 0
         for k in range(len(heuristic_values) - 1):
             if heuristic_values[next_heuristic] > heuristic_values[k + 1]:
                 next_heuristic = k + 1
+        print(f"changed to : {possible_heuristics[next_heuristic].__name__}")
         return possible_heuristics[next_heuristic]
     return heuristic
 
 
 def heuristic_satisfied(game: Reversi, player, heuristic):
-    for name in heuristics_satisfaction:
-    return evaluate(game, player, heuristic) > heuristic
+    for i in range(len(possible_heuristics)):
+        if heuristic == possible_heuristics[i]:
+            return evaluate(game, player, heuristic) > heuristics_satisfaction[i]
+
 
 
 def do_best_move(game_state: Reversi, depth, player, evaluate, minmax=True):
